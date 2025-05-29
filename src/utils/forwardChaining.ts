@@ -1,4 +1,4 @@
-import { Rule, Problem, UserSelection } from '../types';
+import { Problem, UserSelection } from '../types';
 import { problems, rules } from '../data/expertSystem';
 
 export function forwardChaining(userSelections: UserSelection[], categoryId: string): Problem[] {

@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from "react";
-import { UserSelection, Problem } from "@/types";
+import { UserSelection, Problem, Symptom } from "@/types";
 import { forwardChaining } from "@/utils/forwardChaining";
 import SymptomCheckbox from "@/components/SymptomCheckbox";
 import Problemcard from "./ProblemCard";
@@ -53,15 +53,10 @@ function Symptompagination({
     );
 }
 
-function handlepagination(
-    data: any[],
-    PerPage: number
-    // userSelections: any[],
-    // handleSymptomChange: void,
-) {
+function Handlepagination<T extends Symptom | Problem>(data: T[], perPage: number) {
     // const { userSelections, handleSymptomChange } = getuserSelections(symptomdata);
 
-    const itemsPerPage = PerPage;
+    const itemsPerPage = perPage;
     const [currentPage, setCurrentPage] = useState(1);
     const totalPages = Math.ceil(data.length / itemsPerPage);
 
@@ -77,8 +72,8 @@ function handlepagination(
     const prevPage = () => {
         if (currentPage > 1) setCurrentPage(currentPage - 1);
     };
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
+    // const startIndex = (currentPage - 1) * itemsPerPage;
+    // const endIndex = startIndex + itemsPerPage;
 
     return {
         dataPaginated,
@@ -91,7 +86,7 @@ function handlepagination(
 }
 
 interface ExpertSystemProps {
-    symptomdata: any[];
+    symptomdata: Symptom[];
 }
 
 // export default function useSymptomSelections(symptomdata: any[]) {
@@ -116,7 +111,6 @@ const ExpertSystem: React.FC<ExpertSystemProps> = ({ symptomdata }) => {
         if (Category) {
             const results = forwardChaining(userSelections, Category);
             setMatchingProblems(results);
-            console.log("Matching Problems1:", matchingProblems.length);
         }
     }, [userSelections, Category]);
 
@@ -130,8 +124,8 @@ const ExpertSystem: React.FC<ExpertSystemProps> = ({ symptomdata }) => {
         );
     };
 
-    const paginationSymptoms = handlepagination(symptomdata, 5);
-    const paginationProblems = handlepagination(matchingProblems, 1);
+    const paginationSymptoms = Handlepagination<Symptom>(symptomdata, 5);
+    const paginationProblems = Handlepagination<Problem>(matchingProblems, 1);
 
     // // Handle diagnosis submission
     // const handleSubmitDiagnosis = () => {
